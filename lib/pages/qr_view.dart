@@ -1,16 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_auth/home.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-Future<void> saveKey(Barcode result) async {
-  final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-  final file = File('$appDocumentsDir/keyfile.txt');
-  file.writeAsString(result.code ?? '');
-}
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -36,8 +31,24 @@ class _QRViewExampleState extends State<QRViewExample> {
     controller!.resumeCamera();
   }
 
+  Future<void> saveKey(Barcode result) async {
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    await appDocumentsDir.create();
+    final file = File("${appDocumentsDir.path}/keyfile.txt");
+    await file.writeAsString(result.code ?? '');
+    print(result.code);
+    print("here is the code");
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (loading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -161,6 +172,9 @@ class _QRViewExampleState extends State<QRViewExample> {
       saveKey(result!).then((value) => setState(() {
             loading = false;
           }));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => const MyHome(),
+      ));
     });
   }
 
