@@ -6,6 +6,7 @@ import 'package:crypto/crypto.dart';
 Future<String> otpGenerator(String key) async {
   key = key +
       ((DateTime.now().millisecondsSinceEpoch / 10000).floor()).toString();
+  print(key);
   String hashInHEX = sha256.convert(utf8.encode(key)).toString();
   print(hashInHEX);
   String otp = '';

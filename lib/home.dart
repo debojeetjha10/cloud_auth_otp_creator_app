@@ -54,8 +54,18 @@ class MyHome extends StatelessWidget {
         body: FutureBuilder(
           future: getOTP(),
           builder: (context, snapshot) {
-            if (snapshot.hasData) return Text(snapshot.data.toString());
-            return const Text("no data");
+            if (snapshot.hasData) {
+              return Center(
+                  child: Text(
+                snapshot.data.toString(),
+                style: const TextStyle(fontSize: 20),
+              ));
+            }
+            return const Center(
+                child: Text(
+              "no data",
+              style:  TextStyle(fontSize: 20),
+            ));
           },
         ));
   }
